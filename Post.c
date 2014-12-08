@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	fflush(stdin);
 
 	char* ptr = strstr(data, "context=");
-	int len=plen-(ptr-data)-8;
+	int len=plen-(ptr-data)-7;
 
 	CM cm=(CM)malloc(sizeof(CGI_MSG)+len);
 	if(cm==NULL)
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	}
 	memset(cm,0,sizeof(CGI_MSG)+len);
 	cm->packet_len=sizeof(CGI_MSG)+len;
-	cm->len=len;
+	cm->len=len-1;
 
 	if(sscanf(data, "%*[^=]=%d%*[^=]=%[^&]%*[^=]=%[^&]", &cm->type, cm->sender, cm->recver) != 3)
 	{
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 		exit(-1);
 	}
 
-	memcpy(cm->context,data+(plen-len),len);
+	memcpy(cm->context,data+(plen-len+1),len-1);
 	free(data);
 	//1、将结构体send发送至服务端
 	int fd=-1;

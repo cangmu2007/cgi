@@ -26,7 +26,6 @@ CM post_func()
 {
 	char *lenmsg = getenv("CONTENT_LENGTH");
 	int plen;
-	printf("\n");
 
 	if((lenmsg == NULL) || ((plen = atoi(lenmsg)) <= 0))
 	{
@@ -39,7 +38,7 @@ CM post_func()
 	fflush(stdin);
 
 	char* ptr = strstr(data, "context=");
-	uint len=plen-(ptr-data)-8;
+	uint len=plen-(ptr-data)-7;
 
 	CM cm=(CM)malloc(sizeof(CGI_MSG)+len);
 	if(NULL==cm)
@@ -48,14 +47,14 @@ CM post_func()
 	}
 	memset(cm,0,sizeof(CGI_MSG)+len);
 	cm->packet_len=sizeof(CGI_MSG)+len;
-	cm->len=len;
+	cm->len=len-1;
 
 	if(sscanf(data, "%*[^=]=%d%*[^=]=%[^&]%*[^=]=%[^&]", &cm->type, cm->sender, cm->recver) != 3)
 	{
 		return NULL;
 	}
 
-	memcpy(cm->context,data+(plen-len),len);
+	memcpy(cm->context,data+(plen-len+1),len-1);
 	free(data);
 	data=NULL;
 
