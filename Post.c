@@ -38,6 +38,26 @@ int main(int argc, char *argv[])
 
 	memcpy(cm->context,data+(plen-len+1),len-1);
 	free(data);
+
+	//设备判断
+	char* type=getenv("HTTP_USER_AGENT");
+	if(0==strcmp(type,"Android"))
+	{
+		cm->dev_type=ANDROID;
+	}
+	else if(0==strcmp(type,"iOS"))
+	{
+		cm->dev_type=IOS;
+	}
+	else if(0==strcmp(type,"Windows Phone"))
+	{
+		cm->dev_type=WP;
+	}
+	else
+	{
+		cm->dev_type=IGNORE;
+	}
+
 	//1、将结构体send发送至服务端
 	int fd=-1;
 	struct sockaddr_un srv_addr;

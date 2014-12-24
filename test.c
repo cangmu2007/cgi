@@ -173,6 +173,25 @@ int main(void)
 		return -1;
 	}
 
+	//设备判断
+	char* type=getenv("HTTP_USER_AGENT");
+	if(0==strcmp(type,"Android"))
+	{
+		cm->dev_type=ANDROID;
+	}
+	else if(0==strcmp(type,"iOS"))
+	{
+		cm->dev_type=IOS;
+	}
+	else if(0==strcmp(type,"Windows Phone"))
+	{
+		cm->dev_type=WP;
+	}
+	else
+	{
+		cm->dev_type=IGNORE;
+	}
+
 	if((ret=data_exchange(cm))<0)
 	{
 		printf("ERROR!");
